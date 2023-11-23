@@ -136,3 +136,37 @@ def matchups_preprocessing(matchups_df,standings_df):
     # Drop the redundant columns from the merge
     matchups_df = matchups_df.drop(['team_id', 'prior_to_week', 'wins', 'losses', 'points_for', 'points_against', 'points_against_per_game'], axis=1)
     return matchups_df
+
+def feature_importances(model, X_train,N):
+    feature_importances = model.feature_importances_
+
+    # Get the names of the features
+    feature_names = X_train.columns
+
+    # Create a DataFrame to display the feature importances
+    importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': feature_importances})
+
+    # Sort the DataFrame by importance in descending order
+    importance_df = importance_df.sort_values(by='Importance', ascending=False)
+
+    # Display the top N most important features
+    N = 7  # Change N to the number of top features you want to display
+    top_features = importance_df.head(N)
+
+
+    # Plot the feature importances
+    plt.figure(figsize=(10, 6))
+    plt.barh(range(N), top_features['Importance'], align='center')
+    plt.yticks(range(N), top_features['Feature'])
+    plt.xlabel('Feature Importance')
+    plt.title('Top Feature Importances')
+    plt.show()
+    
+def baseline_pred(dataset):
+    #if home team has higher projection, predict home team win
+    dataset['home_team_win_pred'] = (dataset['home_projected'] > dataset['away_projected']).astype(int)
+    #check accuracy of baseline model
+    dataset['home_team_win'] = (dataset['home_score'] > dataset['away_score']).astype(int)
+    dataset['home_team_win_correct'] = (dataset['home_team_win'] == dataset['home_team_win_pred']).astype(int)
+    baseline_accuracy = dataset['home_team_win_correct'].mean()
+    print(f"Baseline accuracy: {baseline_accuracy:.4f}")
