@@ -34,6 +34,9 @@ def matchups_predict(matchups_cleaned,loaded_model,final_features):
     # Create a new DataFrame with the predicted labels and probabilities
     predictions_df = pd.DataFrame({'home_team_win_pred': labels, 'home_team_win_prob': probabilities[:,1]})
 
+    # Add a new column for the maximum predicted probability
+    predictions_df['predicted_prob'] = probabilities.max(axis=1)
+
     # Concatenate the predictions DataFrame with the original matchups_cleaned DataFrame
     matchups_with_predictions = pd.concat([matchups_cleaned, predictions_df], axis=1)
 
