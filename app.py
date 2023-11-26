@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def get_predictions():
-    matchups_with_predictions = run_pipeline('xgb_win_pred_model.sav')
+    matchups_with_predictions = run_pipeline()
     return render_template('predictions.html', predictions=matchups_with_predictions.to_dict(orient='records'))
 
 if __name__ == '__main__':

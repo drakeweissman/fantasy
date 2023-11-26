@@ -10,8 +10,10 @@ from predict_functions import get_current_standings
 from predict_functions import get_current_matchups
 from predict_functions import matchups_predict
 from predict_functions import shap_preds
+import os
+import glob
 
-def run_pipeline(filename):
+def run_pipeline():
     #Fetch league data
     # Initialize league
     league_id = 26347
@@ -32,9 +34,12 @@ def run_pipeline(filename):
     #Matchups Preprocessing to incorporate season stats
     matchups_cleaned = matchups_preprocessing(current_matchups,standings_df)
 
-    #Load the model and make predictions
-    #filename = 'xgb_win_pred_model.sav'
-    loaded_model = pickle.load(open(filename, 'rb'))
+    #Load the most recent model
+    pickle_dir = 'pickle_files'
+    pickle_files = glob.glob(os.path.join(pickle_dir, '*.pickle'))
+    pickle_files.sort(key=os.path.getmtime)
+    latest_pickle_file = pickle_files[-1]
+    loaded_model = pickle.load(open(latest_pickle_file, 'rb'))
 
     #Make matchups predictions
     matchups_with_predictions = matchups_predict(matchups_cleaned,loaded_model,final_features)
