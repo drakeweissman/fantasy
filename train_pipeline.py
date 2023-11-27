@@ -42,8 +42,11 @@ X = matchups_df[final_features] # Features
 y = matchups_df['home_team_win']
 
 #Split data based into training and test sets (Weeks 1-6, Weeks 7-9)) #Will make this a function at some point
-X_train = X[X['week'] < 9]
-X_test = X[X['week'] >= 9]
+total_weeks = X['week'].nunique()
+cutoff_week = int(total_weeks * 0.91)
+
+X_train = X[X['week'] < cutoff_week]
+X_test = X[X['week'] >= cutoff_week]
 y_train = y[X_train.index]
 y_test = y[X_test.index]
 

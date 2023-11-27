@@ -10,8 +10,12 @@ from predict_functions import get_current_standings
 from predict_functions import get_current_matchups
 from predict_functions import matchups_predict
 from predict_functions import shap_preds
+import os
+import glob
+from datetime import datetime
+import sqlite3
 
-def run_pipeline(filename):
+def run_pipeline():
     #Fetch league data
     # Initialize league
     league_id = 26347
@@ -32,14 +36,27 @@ def run_pipeline(filename):
     #Matchups Preprocessing to incorporate season stats
     matchups_cleaned = matchups_preprocessing(current_matchups,standings_df)
 
-    #Load the model and make predictions
-    #filename = 'xgb_win_pred_model.sav'
-    loaded_model = pickle.load(open(filename, 'rb'))
+    #Load the most recent model
+    pickle_dir = 'pickle_files'
+    pickle_files = glob.glob(os.path.join(pickle_dir, '*.pickle'))
+    pickle_files.sort(key=os.path.getmtime)
+    latest_pickle_file = pickle_files[-1]
+    loaded_model = pickle.load(open(latest_pickle_file, 'rb'))
 
-    #Make matchups predictions
+    # Make matchups predictions
     matchups_with_predictions = matchups_predict(matchups_cleaned,loaded_model,final_features)
-    matchups_with_predictions = matchups_with_predictions[['home_team','away_team','predicted_winner','predicted_prob']]
-    return matchups_with_predictions
+    # Add a date_added column with the current date
+    matchups_with_predictions['date_added'] = datetime.now()
+    # Create a connection to your database
+    conn = sqlite3.connect('fantasy_predictions.db')
+    # Save predictions to SQL database with date, all features
+    # Save predictions to SQL database with date, all features
+    matchups_with_predictions.to_sql('matchup_preds', con=conn, if_exists='append', index=False)
+    # Close the connection
+    conn.close()
+    # Save predictions to SQL database with date, all features
+    #matchups_with_predictions = matchups_with_predictions[['home_team','away_team','predicted_winner','predicted_prob']]
+    #return matchups_with_predictions
 
 # Use shap to check feature importance for each of the 5 predictions in the current week
 #shap_preds(matchups_cleaned,final_features,loaded_model)
