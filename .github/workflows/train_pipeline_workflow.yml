@@ -2,7 +2,7 @@ name: Run train_pipeline.py
 
 on:
   schedule:
-    - cron: '30 23 * * 2' # This will run at 11:30 PM UTC (6:30 PM EST) every Tuesday
+    - cron: '57 23 * * 2' # This will run at 11:57 PM UTC (6:30 PM EST) every Tuesday
 jobs:
   build:
     runs-on: ubuntu-latest
