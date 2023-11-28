@@ -41,7 +41,7 @@ final_features = ['home_team_win_pct', 'away_team_win_pct','home_team_ppg','away
 X = matchups_df[final_features] # Features
 y = matchups_df['home_team_win']
 
-#Split data based into training and test sets (Weeks 1-6, Weeks 7-9)) #Will make this a function at some point
+#Split data based into training and test sets
 total_weeks = X['week'].nunique()
 cutoff_week = int(total_weeks * 0.91)
 
