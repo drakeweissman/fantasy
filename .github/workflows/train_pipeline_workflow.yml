@@ -21,4 +21,11 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run train_pipeline.py
-      run: python train_pipeline.py
+      run: |
+        python train_pipeline.py
+        git config --global user.name 'Drake Weissman'
+        git config --global user.email 'drakeweissman@gmail.com'
+        git add pickle_files/*.pickle
+        git commit -m "Add new pickle file"
+        git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/drakeweissman/fantasy.git
+        git push
