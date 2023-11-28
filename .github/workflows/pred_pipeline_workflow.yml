@@ -1,8 +1,7 @@
-name: Run Python scripts
+name: Run pred_pipeline.py
 
 on:
   schedule:
-    - cron: '0 5 * * 2'  # This will run at 5:00 AM UTC every Tuesday
     - cron: '0 5 * * 4'  # This will run at 5:00 AM UTC every Thursday
 
 jobs:
@@ -22,10 +21,5 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run train_pipeline.py
-      run: python train_pipeline.py
-      if: github.event.schedule == '0 5 * * 2'
-
     - name: Run pred_pipeline.py
       run: python pred_pipeline.py
-      if: github.event.schedule == '0 5 * * 4'
