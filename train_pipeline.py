@@ -10,6 +10,8 @@ from train_functions import create_standings
 from train_functions import matchups_preprocessing
 from train_functions import feature_importances
 from train_functions import baseline_pred
+import os
+from datetime import datetime
 
 #Fetch league data
 # Initialize league
@@ -73,9 +75,16 @@ print(f"Test Log Loss: {test_log_loss:.4f}")
 baseline_pred(training_cleaning(get_matchup_scores(league, year)))
 
 # Check feature importances
-feature_importances(xgb_classifier,X_train, 7)
+#feature_importances(xgb_classifier,X_train, 7)
 
 # #Pickle the model
-# filename = 'xgb_win_pred_model.sav'
-# pickle.dump(xgb_classifier, open(filename, 'wb'))
+pickle_dir = 'pickle_files'
+# Create the directory if it doesn't exist
+os.makedirs(pickle_dir, exist_ok=True)
+current_date = datetime.now().strftime('%Y-%m-%d')
+filename_date = f'model_{current_date}.pickle'
+# Join the directory with the filename
+pickle_path = os.path.join(pickle_dir, filename_date)
+# Save the model
+pickle.dump(xgb_classifier, open(pickle_path, 'wb'))
 
