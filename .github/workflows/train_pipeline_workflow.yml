@@ -2,13 +2,17 @@ name: Run train_pipeline.py
 
 on:
   schedule:
-    - cron: '0 16 * * 3'
+    - cron: '30 17 * * 3'
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GH_PAT }}
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+        fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -25,7 +29,6 @@ jobs:
         python train_pipeline.py
         git config --global user.name 'Drake Weissman'
         git config --global user.email 'drakeweissman@gmail.com'
-        git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/drakeweissman/fantasy.git
         git add pickle_files/*.pickle
         git commit -m "Add new pickle file"
         git push
