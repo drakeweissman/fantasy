@@ -14,7 +14,6 @@ def get_predictions():
     query = """
     SELECT home_team, away_team, predicted_winner, predicted_prob
     FROM matchup_preds
-    WHERE date_added >= date('now', '-7 days')
     ORDER BY date_added DESC
     LIMIT 5
     """
