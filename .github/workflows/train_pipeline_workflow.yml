@@ -1,18 +1,26 @@
 name: Run train_pipeline.py
 
 on:
-  schedule:
-    - cron: '30 17 * * 3'
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    env: 
+      CI_COMMIT_MESSAGE: "Add new pickle file"
+      CI_COMMIT_AUTHOR: "Drake Weissman"
 
     steps:
     - uses: actions/checkout@v2
       with:
         token: ${{ secrets.GH_PAT }}
-        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
-        fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+        persist-credentials: false
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -25,10 +33,13 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run train_pipeline.py
+      run: python train_pipeline.py
+
+    - name: GIT Commit Build Artifacts
+      if: github.event_name == 'push'
       run: |
-        python train_pipeline.py
-        git config --global user.name 'Drake Weissman'
-        git config --global user.email 'drakeweissman@gmail.com'
+        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+        git config --global user.email "drakeweissman@gmail.com"
         git add pickle_files/*.pickle
-        git commit -m "Add new pickle file"
+        git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
         git push
