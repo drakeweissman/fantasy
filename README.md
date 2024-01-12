@@ -2,15 +2,7 @@
 
 This Flask app predicts the winner of my fantasy league's current matchups and displays them on a webpage.
 
-## Quick Start
-
-1. **Install Docker:**
-
-   Make sure you have [Docker](https://www.docker.com/products/docker) installed on your machine.
-
-# Fantasy Flask App
-
-This Flask app predicts the winner of different fantasy matchups and displays them on a webpage.
+![App Example](Matchups%20Example.png)
 
 ## Quick Start
 
