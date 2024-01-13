@@ -8,12 +8,12 @@ Goal: Build an ML system that applies continuous learning to automatically retra
 
 The system is powered by two weekly workflows that run via Github Actions:
 
-1. **Retrain Workflow:**
+1. **Retrain Workflow:** (`train_pipeline_workflow.yml` runs `train_pipeline.py`)
    - Fetches new league data using the ESPN web scraping API.
    - Utilizes all historical data to retrain an XGBoost algorithm.
    - Saves the retrained model as a new pickle file.
 
-2. **Predict Workflow:**
+2. **Predict Workflow:** (`pred_pipeline_workflow.yml` runs `pred_pipeline.py`)
    - Fetches current matchups using the ESPN web scraping API.
    - Uses the latest pickle file to make predictions.
    - Saves the predictions to the predictions database.
